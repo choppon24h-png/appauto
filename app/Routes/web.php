@@ -58,8 +58,12 @@ $router->delete('/cliente/manutencao/{id}', 'ClientMaintenanceController', 'dest
 
 // Autenticação de Fornecedor
 $router->get('/cliente/autenticacao', 'ClientAuthenticationController', 'index');
+$router->get('/cliente/autenticacao/gerar', 'ClientAuthenticationController', 'create');
+$router->post('/cliente/autenticacao/gerar', 'ClientAuthenticationController', 'generate');
 $router->post('/cliente/autenticacao/aprovar/{id}', 'ClientAuthenticationController', 'approve');
-$router->post('/cliente/autenticacao/negar/{id}', 'ClientAuthenticationController', 'reject');
+$router->post('/cliente/autenticacao/negar/{id}', 'ClientAuthenticationController', 'deny');
+$router->post('/cliente/autenticacao/revogar/{id}', 'ClientAuthenticationController', 'revoke');
+$router->delete('/cliente/autenticacao/{id}', 'ClientAuthenticationController', 'destroy');
 
 // ============================================================================
 // ROTAS DE FORNECEDOR
