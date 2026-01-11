@@ -75,7 +75,8 @@ $router->post('/cliente/os/{id}/avaliar', 'ClientServiceOrderController', 'rate'
 // ============================================================================
 
 // Dashboard Fornecedor
-$router->get('/fornecedor/dashboard', 'ProviderController', 'dashboard');
+$router->get('/fornecedor/dashboard', 'ProviderDashboardController', 'index');
+$router->get('/fornecedor/dashboard/chart-data', 'ProviderDashboardController', 'chartData');
 
 // Clientes
 $router->get('/fornecedor/clientes', 'ProviderClientController', 'index');
