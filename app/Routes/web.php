@@ -29,7 +29,8 @@ $router->post('/forgot-password', 'AuthController', 'forgotPassword');
 // ============================================================================
 
 // Dashboard Cliente
-$router->get('/cliente/dashboard', 'ClientController', 'dashboard');
+$router->get('/cliente/dashboard', 'ClientDashboardController', 'index');
+$router->get('/cliente/dashboard/chart-data', 'ClientDashboardController', 'chartData');
 
 // Veículos
 $router->get('/cliente/veiculos', 'ClientVehicleController', 'index');
