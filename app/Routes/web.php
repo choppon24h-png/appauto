@@ -65,6 +65,11 @@ $router->post('/cliente/autenticacao/negar/{id}', 'ClientAuthenticationControlle
 $router->post('/cliente/autenticacao/revogar/{id}', 'ClientAuthenticationController', 'revoke');
 $router->delete('/cliente/autenticacao/{id}', 'ClientAuthenticationController', 'destroy');
 
+// Ordens de Serviço
+$router->get('/cliente/os', 'ClientServiceOrderController', 'index');
+$router->get('/cliente/os/{id}', 'ClientServiceOrderController', 'show');
+$router->post('/cliente/os/{id}/avaliar', 'ClientServiceOrderController', 'rate');
+
 // ============================================================================
 // ROTAS DE FORNECEDOR
 // ============================================================================
