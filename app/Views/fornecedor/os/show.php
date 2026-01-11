@@ -66,6 +66,7 @@
 </div>
 <?php if($os['status']==='concluida'&&$os['certificado_codigo']):?>
 <div class="detail-card certificate-card">
+<a href="/certificado/<?= $os['certificado_codigo']?>/download" class="btn-download-cert">Baixar Certificado PDF</a>
 <h3>Certificado APP AUTO</h3>
 <div class="certificate-code"><?= htmlspecialchars($os['certificado_codigo'])?></div>
 <p class="certificate-text">Este serviço foi certificado pelo APP AUTO</p>

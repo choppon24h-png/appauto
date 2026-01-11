@@ -136,3 +136,7 @@ $router->get('/', 'HomeController', 'index');
 
 // Despachar requisição
 $router->dispatch();
+// Certificados
+$router->get('/certificado/validar', 'CertificateController', 'validate');
+$router->get('/certificado/{code}/download', 'CertificateController', 'download');
+$router->get('/certificado/{code}', 'CertificateController', 'validate');

@@ -93,3 +93,8 @@ class ServiceOrder extends Model
         return $this->count(['fornecedor_id' => $providerId, 'status' => $status]);
     }
 }
+public function findByCertificateCode($code){
+$stmt=$this->db->prepare("SELECT * FROM ordens_servico WHERE certificado_codigo=?");
+$stmt->execute([$code]);
+return $stmt->fetch(\PDO::FETCH_ASSOC)?:null;}
+}
