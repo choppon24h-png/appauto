@@ -52,7 +52,9 @@ $router->get('/cliente/manutencao', 'ClientMaintenanceController', 'index');
 $router->get('/cliente/manutencao/novo', 'ClientMaintenanceController', 'create');
 $router->post('/cliente/manutencao', 'ClientMaintenanceController', 'store');
 $router->get('/cliente/manutencao/{id}', 'ClientMaintenanceController', 'show');
+$router->get('/cliente/manutencao/{id}/editar', 'ClientMaintenanceController', 'edit');
 $router->put('/cliente/manutencao/{id}', 'ClientMaintenanceController', 'update');
+$router->delete('/cliente/manutencao/{id}', 'ClientMaintenanceController', 'destroy');
 
 // Autenticação de Fornecedor
 $router->get('/cliente/autenticacao', 'ClientAuthenticationController', 'index');
