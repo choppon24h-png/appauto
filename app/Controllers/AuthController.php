@@ -39,6 +39,9 @@ class AuthController extends Controller
             }
         }
 
+        // Gerar CSRF token
+        $this->generateCsrfToken();
+
         $this->view('auth/login');
     }
 
@@ -112,6 +115,9 @@ class AuthController extends Controller
         if ($this->isAuthenticated()) {
             $this->redirect('/');
         }
+
+        // Gerar CSRF token
+        $this->generateCsrfToken();
 
         $config = require CONFIG_PATH . '/app.php';
         $segments = $config['segments'];
@@ -188,11 +194,14 @@ class AuthController extends Controller
 
         // Criar usuário
         try {
+            $telefone = $this->sanitize($_POST['telefone'] ?? null);
+
             $userId = $this->userModel->create([
                 'nome' => $nome,
                 'email' => $email,
                 'cpf_cnpj' => $cpf_cnpj,
                 'senha' => $this->userModel->hashPassword($password),
+                'telefone' => $telefone,
                 'role' => $role,
                 'status' => 'ativo',
                 'data_criacao' => date('Y-m-d H:i:s'),
@@ -201,9 +210,27 @@ class AuthController extends Controller
             // Se for fornecedor, criar registro de fornecedor
             if ($role === 'fornecedor') {
                 $segment = $this->sanitize($_POST['segmento'] ?? 'outro');
+                $nomeEstabelecimento = $this->sanitize($_POST['nome_estabelecimento'] ?? $nome);
+                $endereco = $this->sanitize($_POST['endereco'] ?? null);
+                $cidade = $this->sanitize($_POST['cidade'] ?? null);
+                $estado = $this->sanitize($_POST['estado'] ?? null);
+                $cep = $this->sanitize($_POST['cep'] ?? null);
+                $logo = null;
+
+                // Upload de logo
+                if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+                    $logo = $this->uploadLogo($_FILES['logo'], $userId);
+                }
+
                 $this->providerModel->create([
                     'usuario_id' => $userId,
+                    'nome_estabelecimento' => $nomeEstabelecimento,
                     'segmento' => $segment,
+                    'logo' => $logo,
+                    'endereco' => $endereco,
+                    'cidade' => $cidade,
+                    'estado' => $estado,
+                    'cep' => $cep,
                     'status' => 'pendente',
                     'data_criacao' => date('Y-m-d H:i:s'),
                 ]);
@@ -260,5 +287,44 @@ class AuthController extends Controller
         // TODO: Implementar envio de email com link de recuperação
 
         $this->json(['sucesso' => true, 'mensagem' => 'Link de recuperação enviado para seu email']);
+    }
+
+    /**
+     * Upload de logo do fornecedor
+     * 
+     * @param array $file Arquivo $_FILES
+     * @param int $userId ID do usuário
+     * @return string|null Caminho do arquivo ou null
+     */
+    private function uploadLogo($file, $userId)
+    {
+        // Validar tipo
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (!in_array($file['type'], $allowedTypes)) {
+            return null;
+        }
+
+        // Validar tamanho (2MB)
+        if ($file['size'] > 2 * 1024 * 1024) {
+            return null;
+        }
+
+        // Criar diretório se não existir
+        $uploadDir = UPLOADS_PATH . '/logos';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        // Gerar nome único
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = 'logo_' . $userId . '_' . time() . '.' . $extension;
+        $filepath = $uploadDir . '/' . $filename;
+
+        // Mover arquivo
+        if (move_uploaded_file($file['tmp_name'], $filepath)) {
+            return '/uploads/logos/' . $filename;
+        }
+
+        return null;
     }
 }
