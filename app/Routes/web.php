@@ -93,7 +93,9 @@ $router->get('/fornecedor/veiculos/{id}', 'ProviderVehicleController', 'show');
 
 // Ordens de Serviço
 $router->get('/fornecedor/os', 'ProviderServiceOrderController', 'index');
-$router->post('/fornecedor/os/iniciar', 'ProviderServiceOrderController', 'start');
+$router->get('/fornecedor/os/criar', 'ProviderServiceOrderController', 'create');
+$router->post('/fornecedor/os', 'ProviderServiceOrderController', 'store');
+$router->get('/fornecedor/clientes/{id}/veiculos', 'ProviderServiceOrderController', 'getVehiclesByClient');
 $router->get('/fornecedor/os/{id}', 'ProviderServiceOrderController', 'show');
 $router->post('/fornecedor/os/{id}/finalizar', 'ProviderServiceOrderController', 'complete');
 $router->post('/fornecedor/os/{id}/reagendar', 'ProviderServiceOrderController', 'reschedule');
