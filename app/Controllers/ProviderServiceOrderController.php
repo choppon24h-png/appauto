@@ -55,3 +55,32 @@ $this->requireAuth();$this->requireRole('fornecedor');
 $vehicles=$this->vehicleModel->findByUserId($clientId);
 $this->json(['sucesso'=>true,'veiculos'=>$vehicles]);}
 }
+
+public function show($id){
+$this->requireAuth();$this->requireRole('fornecedor');
+$user=$this->getAuthUser();$providerId=$user['fornecedor_id']??null;
+$os=$this->serviceOrderModel->findById($id);
+if(!$os||$os['fornecedor_id']!=$providerId){$_SESSION['error']='O.S não encontrada';header('Location: /fornecedor/os');exit;}
+$vehicle=$this->vehicleModel->findById($os['veiculo_id']);
+$client=$this->userModel->findById($os['cliente_id']);
+$this->view('fornecedor/os/show',['user'=>$user,'os'=>$os,'vehicle'=>$vehicle,'client'=>$client]);}
+public function complete($id){
+$this->requireAuth();$this->requireRole('fornecedor');
+if($_SERVER['REQUEST_METHOD']!=='POST'){http_response_code(405);return;}
+if(!$this->validateCsrf()){$this->json(['sucesso'=>false,'mensagem'=>'Token CSRF inválido'],403);}
+$user=$this->getAuthUser();$providerId=$user['fornecedor_id']??null;
+$os=$this->serviceOrderModel->findById($id);
+if(!$os||$os['fornecedor_id']!=$providerId){$this->json(['sucesso'=>false,'mensagem'=>'O.S não encontrada'],404);}
+$observacoes=$this->sanitize($_POST['observacoes']??'');
+$certificadoCodigo='APPAUTO-'.strtoupper(uniqid());
+try{
+$this->serviceOrderModel->update($id,[
+'status'=>'concluida',
+'observacoes_finais'=>$observacoes,
+'certificado_codigo'=>$certificadoCodigo,
+'data_conclusao'=>date('Y-m-d H:i:s')
+]);
+$this->json(['sucesso'=>true,'mensagem'=>'O.S finalizada com sucesso','certificado'=>$certificadoCodigo]);}
+catch(\Exception $e){error_log("Erro ao finalizar O.S: ".$e->getMessage());
+$this->json(['sucesso'=>false,'mensagem'=>'Erro ao finalizar O.S'],500);}}
+}
