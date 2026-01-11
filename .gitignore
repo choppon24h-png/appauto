@@ -1,0 +1,61 @@
+# ============================================================================
+# APP AUTO - .gitignore
+# ============================================================================
+
+# Ambiente
+.env
+.env.local
+.env.production
+
+# Logs
+storage/logs/*.log
+storage/logs/*.txt
+*.log
+
+# Cache
+storage/cache/*
+!storage/cache/.gitkeep
+
+# Uploads
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Composer
+/vendor/
+composer.lock
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Temporários
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# Banco de Dados
+*.sql
+*.sqlite
+*.db
+
+# Arquivos de configuração sensíveis
+config/database.local.php
+config/secrets.php
