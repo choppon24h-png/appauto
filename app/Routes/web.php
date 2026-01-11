@@ -89,7 +89,7 @@ $router->put('/fornecedor/clientes/{id}', 'ProviderClientController', 'update');
 // Veículos
 $router->get('/fornecedor/veiculos', 'ProviderVehicleController', 'index');
 $router->post('/fornecedor/veiculos/buscar', 'ProviderVehicleController', 'search');
-$router->get('/fornecedor/veiculos/{placa}', 'ProviderVehicleController', 'show');
+$router->get('/fornecedor/veiculos/{id}', 'ProviderVehicleController', 'show');
 
 // Ordens de Serviço
 $router->get('/fornecedor/os', 'ProviderServiceOrderController', 'index');
