@@ -18,8 +18,11 @@
 </div>
 <div class="header-right">
 <a href="<?= BASE_URL ?>/fornecedor/os" class="btn btn-secondary">Voltar</a>
-<?php if($os['status']!=='concluida'):?>
+<?php if($os['status']!=='concluida'&&$os['status']!=='entregue'):?>
 <button onclick="openCompleteModal()" class="btn btn-success">Finalizar Serviço</button>
+<?php endif;?>
+<?php if($os['status']==='concluida'):?>
+<button onclick="openPickupModal()" class="btn btn-primary">Registrar Retirada</button>
 <?php endif;?>
 </div>
 </header>
@@ -32,6 +35,9 @@
 <div class="detail-item"><span class="label">Data Abertura:</span> <?= date('d/m/Y H:i',strtotime($os['data_abertura']))?></div>
 <?php if($os['data_conclusao']):?>
 <div class="detail-item"><span class="label">Data Conclusão:</span> <?= date('d/m/Y H:i',strtotime($os['data_conclusao']))?></div>
+<?php endif;?>
+<?php if($os['data_retirada']):?>
+<div class="detail-item"><span class="label">Data Retirada:</span> <?= date('d/m/Y H:i',strtotime($os['data_retirada']))?></div>
 <?php endif;?>
 </div>
 </div>
@@ -87,6 +93,22 @@
 <textarea name="observacoes" class="form-control" rows="4" placeholder="Adicione observações sobre o serviço realizado..."></textarea>
 </div>
 <button type="submit" class="btn btn-success btn-block">Finalizar e Gerar Certificado</button>
+</form>
+</div>
+</div>
+</div>
+<div class="modal" id="pickup-modal">
+<div class="modal-content">
+<div class="modal-header">
+<h3>Registrar Retirada do Veículo</h3>
+<button class="modal-close" onclick="closePickupModal()">&times;</button>
+</div>
+<div class="modal-body">
+<p>Confirma a retirada do veículo pelo cliente?</p>
+<p class="text-muted">Esta ação irá encerrar definitivamente a O.S.</p>
+<form id="pickup-form">
+<input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']??''?>">
+<button type="submit" class="btn btn-primary btn-block">Confirmar Retirada</button>
 </form>
 </div>
 </div>

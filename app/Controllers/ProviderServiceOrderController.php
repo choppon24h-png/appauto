@@ -84,3 +84,21 @@ $this->json(['sucesso'=>true,'mensagem'=>'O.S finalizada com sucesso','certifica
 catch(\Exception $e){error_log("Erro ao finalizar O.S: ".$e->getMessage());
 $this->json(['sucesso'=>false,'mensagem'=>'Erro ao finalizar O.S'],500);}}
 }
+
+public function pickup($id){
+$this->requireAuth();$this->requireRole('fornecedor');
+if($_SERVER['REQUEST_METHOD']!=='POST'){http_response_code(405);return;}
+if(!$this->validateCsrf()){$this->json(['sucesso'=>false,'mensagem'=>'Token CSRF inválido'],403);}
+$user=$this->getAuthUser();$providerId=$user['fornecedor_id']??null;
+$os=$this->serviceOrderModel->findById($id);
+if(!$os||$os['fornecedor_id']!=$providerId){$this->json(['sucesso'=>false,'mensagem'=>'O.S não encontrada'],404);}
+if($os['status']!=='concluida'){$this->json(['sucesso'=>false,'mensagem'=>'O.S deve estar concluída para registrar retirada'],422);}
+try{
+$this->serviceOrderModel->update($id,[
+'status'=>'entregue',
+'data_retirada'=>date('Y-m-d H:i:s')
+]);
+$this->json(['sucesso'=>true,'mensagem'=>'Retirada registrada com sucesso']);}
+catch(\Exception $e){error_log("Erro ao registrar retirada: ".$e->getMessage());
+$this->json(['sucesso'=>false,'mensagem'=>'Erro ao registrar retirada'],500);}}
+}
