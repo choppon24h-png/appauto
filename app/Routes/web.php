@@ -43,6 +43,8 @@ $router->delete('/cliente/veiculos/{id}', 'ClientVehicleController', 'destroy');
 // Carteira (Documentos)
 $router->get('/cliente/carteira', 'ClientWalletController', 'index');
 $router->post('/cliente/carteira/upload', 'ClientWalletController', 'upload');
+$router->get('/cliente/carteira/{id}/download', 'ClientWalletController', 'download');
+$router->get('/cliente/carteira/{id}/view', 'ClientWalletController', 'view');
 $router->delete('/cliente/carteira/{id}', 'ClientWalletController', 'destroy');
 
 // Manutenção
